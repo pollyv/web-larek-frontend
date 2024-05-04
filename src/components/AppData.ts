@@ -40,8 +40,7 @@ export class AppState extends Model<IAppState> {
 	getTotal(): number {
 		// Вычисление общей суммы заказа
 		return this.order.items.reduce(
-			(total, itemId) =>
-				total + this.catalog.find((item) => item.id === itemId).price,
+			(a, c) => a + this.catalog.find((it) => it.id === c).price,
 			0
 		);
 	}
@@ -75,7 +74,7 @@ export class AppState extends Model<IAppState> {
 			errors.address = 'Укажите адрес';
 		}
 		this.formErrors = errors;
-		this.events.emit('orderformErrors:change', this.formErrors);
+		this.events.emit('orderFormErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
@@ -106,10 +105,18 @@ export class AppState extends Model<IAppState> {
 		return this.order.items.length;
 	}
 
-	clearBasket() {
+	clearBasket(): void {
 		// Очистка корзины
 		this.order.items.forEach((id) => {
 			this.toggleOrderedItem(id, false);
 		});
+	}
+
+	resetForm(): void {
+		// Метод для сброса значений формы
+		this.order.payment = '';
+		this.order.address = '';
+		this.order.email = '';
+		this.order.phonenumber = '';
 	}
 }

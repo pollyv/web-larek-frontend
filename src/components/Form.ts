@@ -106,8 +106,9 @@ export class ContactsForm extends Form<IContactsForm> {
 	}
 
 	// Установка значения телефона
-	set phone(value: string) {
-		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
-			value;
+	set phonenumber(value: string) {
+		(
+			this.container.elements.namedItem('phonenumber') as HTMLInputElement
+		).value = value;
 	}
 }

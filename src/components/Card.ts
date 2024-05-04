@@ -1,5 +1,5 @@
 import { Component } from './base/Components'; // Импорт базового класса компонента
-import { IProductItem } from '../types/index'; // Импорт интерфейса продукта
+import { IProductItem, TCategoryProduct } from '../types/index'; // Импорт интерфейса продукта
 import { ensureElement, formatNumber } from '../utils/utils'; // Импорт вспомогательных функций
 
 // Интерфейс для поведения карточки
@@ -39,19 +39,15 @@ export abstract class Card extends Component<ICard> {
 		}
 	}
 
-	// Установка идентификатора карточки
 	set id(value: string) {
 		this.container.dataset.id = value;
 	}
 
-	// Установка заголовка
 	set title(value: string) {
 		this.setText(this._title, value);
 	}
 
-	// Установка цены
 	set price(value: number) {
-		// Форматирование цены и установка текста
 		if (value) {
 			this.setText(this._price, `${formatNumber(value)} синапсов`);
 		} else {
@@ -59,58 +55,33 @@ export abstract class Card extends Component<ICard> {
 		}
 	}
 
-	// Установка текста кнопки
-	set buttonText(value: string) {
+	set buttonName(value: string) {
 		this.setText(this._button, value);
 	}
 
-	// Установка статуса кнопки
-	set buttonStatus(value: number) {
+	set statusButton(value: number) {
 		if (!value) {
 			this.setDisabled(this._button, true);
 		}
 	}
 
-	// Установка изображения
 	set image(value: string) {
 		this.setImage(this._image, value, this.title);
 	}
 
-	// Установка описания
 	set description(value: string) {
 		this.setText(this._description, value);
 	}
 
-	// Установка категории
-	set category(value: string) {
+	set category(value: TCategoryProduct) {
 		this.setText(this._category, value);
-		this.setColorCategory();
 	}
 
-	// Получение категории
-	get category(): string {
-		return this._category.textContent || '';
-	}
-
-	// Установка цвета категории
-	setColorCategory() {
-		switch (this.category) {
-			case 'софт-скил':
-				this.toggleClass(this._category, 'card__category_soft');
-				break;
-			case 'другое':
-				this.toggleClass(this._category, 'card__category_other');
-				break;
-			case 'хард-скил':
-				this.toggleClass(this._category, 'card__category_hard');
-				break;
-			case 'дополнительное':
-				this.toggleClass(this._category, 'card__category_additional');
-				break;
-			case 'кнопка':
-				this.toggleClass(this._category, 'card__category_button');
-				break;
-		}
+	setColorCategory(
+		value: TCategoryProduct,
+		settings: Record<TCategoryProduct, string>
+	): void {
+		this.toggleClass(this._category, settings[value]);
 	}
 }
 

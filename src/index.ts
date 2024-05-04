@@ -2,6 +2,7 @@ import './scss/styles.scss'; // Импорт стилей
 
 import { OnlineStoreAPI } from './components/OnlineStore'; // Импорт API онлайн-магазина
 import { API_URL, CDN_URL } from './utils/constants'; // Импорт констант API и CDN
+import { settings } from './utils/constants';
 import { EventEmitter } from './components/base/events'; // Импорт класса EventEmitter
 import { AppState } from './components/AppData'; // Импорт состояния приложения
 import { Page } from './components/Page'; // Импорт класса страницы
@@ -51,13 +52,21 @@ const contactsForm = new ContactsForm(
 	events
 );
 
+// функция для очистки корзины заказа
+function clearOrder() {
+	appData.clearBasket();
+	page.counter = appData.getCountItems();
+	events.off('order:clear', clearOrder);
+}
+
 // Обработчик события изменения списка карточек
 events.on('cards:changed', (cards: { catalog: IProductItem[] }) => {
-	// Генерация карточек из списка продуктов и их рендеринг
 	page.catalog = cards.catalog.map((item) => {
 		const card = new CardCatalog(cloneTemplate(cardCatalogTemplate), {
 			onClick: () => events.emit('card:select', item),
 		});
+
+		card.setColorCategory(item.category, settings);
 		return card.render({
 			price: item.price,
 			title: item.title,
@@ -84,6 +93,13 @@ events.on('card:select', (item: IProductItem) => {
 			}
 		},
 	});
+
+	card.setColorCategory(item.category, settings);
+
+	// Обновляем текст на кнопке в зависимости от наличия товара в корзине
+	card.buttonText = appData.isIncludedCard(item.id)
+		? 'Удалить из корзины'
+		: 'В корзину';
 
 	card.buttonStatus = item.price;
 	modal.render({
@@ -199,8 +215,7 @@ events.on('contacts:submit', () => {
 			const success = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					// Очистка корзины после успешного заказа
-					appData.clearBasket();
-					page.counter = appData.getCountItems();
+					clearOrder();
 					modal.close();
 				},
 			});
@@ -210,6 +225,7 @@ events.on('contacts:submit', () => {
 					total: result.total,
 				}),
 			});
+			events.on('order:clear', clearOrder);
 		})
 		.catch((err) => {
 			console.error(err);
@@ -224,6 +240,11 @@ events.on('modal:open', () => {
 // Обработчик события закрытия модального окна
 events.on('modal:close', () => {
 	page.locked = false; // Разблокировка страницы при закрытии модального окна
+});
+
+// Очистка данных полей для активации валидации после закрытия модального окна
+events.on('form:reset', () => {
+	appData.resetForm();
 });
 
 // Получение списка карточек с сервера и установка списка в состояние приложения

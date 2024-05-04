@@ -43,6 +43,8 @@ export class Modal extends Component<IModalContent> {
 		this.container.classList.remove('modal_active');
 		this.content = null; // Очищаем содержимое модального окна
 		this.events.emit('modal:close');
+		this.events.emit('form:reset');
+		this.events.emit('order:clear');
 	}
 
 	// Метод для рендеринга модального окна с указанным содержимым

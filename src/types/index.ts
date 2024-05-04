@@ -29,11 +29,6 @@ export interface IOrder extends IAddressForm, IContactsForm {
 	total: number;
 }
 
-export interface IOrderSuccess {
-	id: string;
-	total: number;
-}
-
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 export interface IAppState {
@@ -42,4 +37,14 @@ export interface IAppState {
 	formErrors: FormErrors;
 }
 
+export interface IOrderSuccess {
+	id: string;
+	total: number;
+}
+
 export type TSuccess = Pick<IOrderSuccess, 'total'>;
+
+export type ApiListResponse<Type> = {
+	total: number;
+	items: Type[];
+};
