@@ -214,6 +214,7 @@ interface IOrderSuccess {
 - `set buttonText`: Устанавливает текст кнопки.
 - `set buttonStatus`: Устанавливает статус активности кнопки.
 - `set price`: Устанавливает цену продукта.
+- `setColorCategory`: Устанавливает цвет категории карточки.
 
 #### CardCatalog:
 
