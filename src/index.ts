@@ -154,8 +154,9 @@ events.on('order:open', () => {
 });
 
 // Обработчик события выбора способа оплаты
-events.on('buttonPayments:select', (button: { button: HTMLButtonElement }) => {
-	appData.setOrderField('payment', button.button.getAttribute('name'));
+events.on('buttonPayments:select', (event: { button: HTMLButtonElement }) => {
+	event.button.classList.add('button_alt-active');
+	appData.setOrderField('payment', event.button.getAttribute('name'));
 });
 
 // Обработчик изменения полей формы адреса
@@ -181,7 +182,7 @@ events.on('order:submit', () => {
 	modal.render({
 		content: contactsForm.render({
 			email: '',
-			phonenumber: '',
+			phone: '',
 			valid: false,
 			errors: [],
 		}),
@@ -198,11 +199,9 @@ events.on(
 
 // Обработчик изменения ошибок формы контактов
 events.on('contactsFormErrors:change', (errors: Partial<IContactsForm>) => {
-	const { email, phonenumber } = errors;
-	contactsForm.valid = !phonenumber && !email;
-	contactsForm.errors = Object.values({ phonenumber, email })
-		.filter((i) => !!i)
-		.join('; ');
+	const { email, phone } = errors;
+	contactsForm.valid = !phone && !email;
+	contactsForm.errors = [phone, email].filter((i) => !!i).join('; ');
 });
 
 // Обработчик события отправки данных формы контактов

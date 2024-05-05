@@ -51,7 +51,7 @@ export abstract class Card extends Component<ICard> {
 		if (value) {
 			this.setText(this._price, `${formatNumber(value)} синапсов`);
 		} else {
-			this.setText(this._price, '');
+			this.setText(this._price, 'Бесценно');
 		}
 	}
 
@@ -119,6 +119,8 @@ export class CardForBasket extends Card {
 
 // Класс предварительного просмотра карточки
 export class CardPreview extends Card {
+	buttonText: string;
+	buttonStatus: number;
 	constructor(container: HTMLElement, behavior?: ICardBehavior) {
 		super(container, behavior);
 

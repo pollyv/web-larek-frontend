@@ -69,7 +69,6 @@ export abstract class Form<T> extends Component<IFormCondition> {
 // Класс формы для адреса
 export class AddressForm extends Form<IAddressForm> {
 	protected _buttonPayments: HTMLButtonElement[]; // Кнопки выбора оплаты
-
 	constructor(container: HTMLFormElement, events: IEvents) {
 		super(container, events);
 		this._buttonPayments = Array.from(
@@ -79,6 +78,10 @@ export class AddressForm extends Form<IAddressForm> {
 		// Обработчики для кнопок выбора оплаты
 		this._buttonPayments.forEach((button) => {
 			button.addEventListener('click', (e: Event) => {
+				this._buttonPayments.forEach((button) => {
+					if (button === e.target) return;
+					button.classList.remove('button_alt-active');
+				});
 				events.emit('buttonPayments:select', {
 					button: e.target as HTMLButtonElement,
 				});
@@ -106,9 +109,8 @@ export class ContactsForm extends Form<IContactsForm> {
 	}
 
 	// Установка значения телефона
-	set phonenumber(value: string) {
-		(
-			this.container.elements.namedItem('phonenumber') as HTMLInputElement
-		).value = value;
+	set phone(value: string) {
+		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
+			value;
 	}
 }

@@ -1,23 +1,23 @@
 import _ from 'lodash'; // Импорт lodash для использования вспомогательных функций
-import { Model } from './base/Model'; // Импорт базового класса Model для создания модели AppState
 import {
-	IAppState, // Импорт интерфейса для состояния приложения
+	FormErrors, // Импорт интерфейса для заказа
+	IAddressForm,
+	IAppState, // Импорт интерфейса для формы заказа
+	IContactsForm, // Импорт интерфейса для элемента продукта
+	IOrder, // Импорт интерфейса для состояния приложения
 	IProductItem, // Импорт интерфейса для элемента продукта
-	IOrder, // Импорт интерфейса для заказа
-	IAddressForm, // Импорт интерфейса для формы заказа
-	IContactsForm, // Импорт интерфейса для формы контактов
-	FormErrors, // Импорт типа для ошибок формы
 } from '../types/index'; // Импорт пользовательских типов данных
+import { Model } from './base/Model'; // Импорт базового класса Model для создания модели AppState
 
 export class AppState extends Model<IAppState> {
 	// Класс AppState, наследующийся от Model<IAppState>
-	catalog: IProductItem[]; // Список продуктов в каталоге
+	catalog: IProductItem[] = []; // Список продуктов в каталоге
 	order: IOrder = {
 		// Информация о заказе
 		payment: '', // Способ оплаты
 		address: '', // Адрес доставки
 		email: '', // Email
-		phonenumber: '', // Номер телефона
+		phone: '', // Номер телефона
 		total: 0, // Общая сумма заказа
 		items: [], // Выбранные продукты
 	};
@@ -30,6 +30,7 @@ export class AppState extends Model<IAppState> {
 		} else {
 			this.order.items = _.without(this.order.items, id);
 		}
+		this.order.total = this.getTotal();
 	}
 
 	isIncludedCard(cardId: string): boolean {
@@ -74,7 +75,7 @@ export class AppState extends Model<IAppState> {
 			errors.address = 'Укажите адрес';
 		}
 		this.formErrors = errors;
-		this.events.emit('orderFormErrors:change', this.formErrors);
+		this.events.emit('addressFormErrors:change', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 
@@ -92,8 +93,8 @@ export class AppState extends Model<IAppState> {
 		if (!this.order.email) {
 			errors.email = 'Необходимо указать email';
 		}
-		if (!this.order.phonenumber) {
-			errors.phonenumber = 'Необходимо указать телефон';
+		if (!this.order.phone) {
+			errors.phone = 'Необходимо указать телефон';
 		}
 		this.formErrors = errors;
 		this.events.emit('contactsFormErrors:change', this.formErrors);
@@ -117,6 +118,6 @@ export class AppState extends Model<IAppState> {
 		this.order.payment = '';
 		this.order.address = '';
 		this.order.email = '';
-		this.order.phonenumber = '';
+		this.order.phone = '';
 	}
 }

@@ -21,7 +21,7 @@ export interface IAddressForm {
 
 export interface IContactsForm {
 	email: string;
-	phonenumber: string;
+	phone: string;
 }
 
 export interface IOrder extends IAddressForm, IContactsForm {
