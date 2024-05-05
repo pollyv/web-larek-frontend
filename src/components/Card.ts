@@ -1,6 +1,9 @@
-import { Component } from './base/Components'; // Импорт базового класса компонента
-import { IProductItem, TCategoryProduct } from '../types/index'; // Импорт интерфейса продукта
-import { ensureElement, formatNumber } from '../utils/utils'; // Импорт вспомогательных функций
+// Импорт базового класса компонента
+import { Component } from './base/Components';
+// Импорт интерфейса продукта
+import { IProductItem, TCategoryProduct } from '../types/index';
+// Импорт вспомогательных функций
+import { ensureElement, formatNumber } from '../utils/utils';
 
 // Интерфейс для поведения карточки
 interface ICardBehavior {
@@ -39,14 +42,17 @@ export abstract class Card extends Component<ICard> {
 		}
 	}
 
+	// Установка идентификатора карточки
 	set id(value: string) {
 		this.container.dataset.id = value;
 	}
 
+	// Установка заголовка карточки
 	set title(value: string) {
 		this.setText(this._title, value);
 	}
 
+	// Установка цены карточки
 	set price(value: number) {
 		if (value) {
 			this.setText(this._price, `${formatNumber(value)} синапсов`);
@@ -55,28 +61,34 @@ export abstract class Card extends Component<ICard> {
 		}
 	}
 
-	set buttonName(value: string) {
+	// Установка текста кнопки карточки
+	set buttonText(value: string) {
 		this.setText(this._button, value);
 	}
 
-	set statusButton(value: number) {
+	// Установка состояния кнопки карточки
+	set buttonStatus(value: number) {
 		if (!value) {
 			this.setDisabled(this._button, true);
 		}
 	}
 
+	// Установка изображения карточки
 	set image(value: string) {
 		this.setImage(this._image, value, this.title);
 	}
 
+	// Установка описания карточки
 	set description(value: string) {
 		this.setText(this._description, value);
 	}
 
+	// Установка категории карточки
 	set category(value: TCategoryProduct) {
 		this.setText(this._category, value);
 	}
 
+	// Установка цвета категории карточки
 	setColorCategory(
 		value: TCategoryProduct,
 		settings: Record<TCategoryProduct, string>
@@ -104,9 +116,9 @@ export class CardForBasket extends Card {
 		super(container, behavior);
 
 		// Инициализация полей для карточки в корзине
-		this._button = ensureElement<HTMLButtonElement>(`.card__button`, container);
+		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
 		this._itemIndex = ensureElement<HTMLImageElement>(
-			`.basket__item-index`,
+			'.basket__item-index',
 			container
 		);
 	}
@@ -119,8 +131,6 @@ export class CardForBasket extends Card {
 
 // Класс предварительного просмотра карточки
 export class CardPreview extends Card {
-	buttonText: string;
-	buttonStatus: number;
 	constructor(container: HTMLElement, behavior?: ICardBehavior) {
 		super(container, behavior);
 
@@ -128,6 +138,17 @@ export class CardPreview extends Card {
 		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._category = ensureElement<HTMLElement>('.card__category', container);
 		this._description = ensureElement<HTMLElement>('.card__text', container);
-		this._button = ensureElement<HTMLButtonElement>(`.card__button`, container);
+		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
+
+		// Удаляем обработчик события клика на всю карточку
+		this.container.removeEventListener('click', behavior?.onClick);
+
+		// Добавляем обработчик события клика на кнопку "В корзину"
+		this._button.addEventListener('click', (event) => {
+			event.stopPropagation(); // Останавливаем всплытие события
+			if (behavior && behavior.onClick) {
+				behavior.onClick(event); // Вызываем обработчик
+			}
+		});
 	}
 }

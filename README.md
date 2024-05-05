@@ -55,11 +55,11 @@ yarn build
 // Интерфейс карточки товара
 interface IProductItem {
   id: string;
-  description: string;
-  image: string;
-  title: string;
-  category: TCategoryProduct;
-  price: number | null;
+	description: string;
+	image: string;
+	title: string;
+	category: TCategoryProduct;
+	price: number | null;
 }
 
 // Интерфейс формы c адресом доставки
@@ -71,7 +71,7 @@ interface IAddressForm {
 // Интерфейс формы c контактами
 interface IContactsForm {
   email: string;
-  phonenumber: string;
+	phone: string;
 }
 
 // Интерфейс данных о заказе (при запросе на сервер)
@@ -107,6 +107,9 @@ interface IOrderSuccess {
 - `on`: устанавливает обработчик для события.
 - `off`: удаляет обработчик для события.
 - `emit`: инициирует событие с переданными данными.
+- `onAll`: устанавливает обработчик для всех событий.
+- `offAll`: снимает обработчик со всех событий.
+- `trigger`: делает коллбек-триггер, генерирующий событие при вызове.
 
 ### Абстрактный класс Component:
 

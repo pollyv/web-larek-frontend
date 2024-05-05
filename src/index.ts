@@ -16,6 +16,7 @@ import { Success } from './components/Success'; // Импорт сообщени
 
 // Создание экземпляра класса EventEmitter
 const events = new EventEmitter();
+
 // Создание экземпляра класса OnlineStoreAPI с передачей констант API и CDN
 const api = new OnlineStoreAPI(CDN_URL, API_URL);
 
@@ -39,20 +40,23 @@ const appData = new AppState({}, events);
 
 // Создание экземпляра класса Page и передача ему корневого элемента и экземпляра EventEmitter
 const page = new Page(document.body, events);
+
 // Создание экземпляра класса Modal и передача ему контейнера для модального окна и экземпляра EventEmitter
 const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), events);
 
 // Создание экземпляра корзины
 const basket = new Basket(cloneTemplate(basketTemplate), events);
+
 // Создание экземпляра формы адреса
 const addressForm = new AddressForm(cloneTemplate(addressFormTemplate), events);
+
 // Создание экземпляра формы контактов
 const contactsForm = new ContactsForm(
 	cloneTemplate(contactsFormTemplate),
 	events
 );
 
-// функция для очистки корзины заказа
+// Функция для очистки корзины заказа
 function clearOrder() {
 	appData.clearBasket();
 	page.counter = appData.getCountItems();
@@ -76,12 +80,10 @@ events.on('cards:changed', (cards: { catalog: IProductItem[] }) => {
 	});
 });
 
-// Обработчик события выбора карточки
+// Обработчик события выбора карточки товара
 events.on('card:select', (item: IProductItem) => {
-	// Создание предварительного просмотра карточки и его рендеринг в модальном окне
 	const card = new CardPreview(cloneTemplate(cardPreviewTemplate), {
 		onClick: () => {
-			// Обработка добавления/удаления товара из корзины
 			if (!appData.isIncludedCard(item.id)) {
 				appData.toggleOrderedItem(item.id, true);
 				page.counter = appData.getCountItems();
@@ -95,12 +97,6 @@ events.on('card:select', (item: IProductItem) => {
 	});
 
 	card.setColorCategory(item.category, settings);
-
-	// Обновляем текст на кнопке в зависимости от наличия товара в корзине
-	card.buttonText = appData.isIncludedCard(item.id)
-		? 'Удалить из корзины'
-		: 'В корзину';
-
 	card.buttonStatus = item.price;
 	modal.render({
 		content: card.render({
