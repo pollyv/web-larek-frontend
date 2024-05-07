@@ -32,15 +32,6 @@ export abstract class Card extends Component<ICard> {
 		// Инициализация полей карточки
 		this._title = ensureElement<HTMLElement>('.card__title', container);
 		this._price = ensureElement<HTMLElement>('.card__price', container);
-
-		// Добавление обработчика события клика, если передано поведение карточки
-		if (behavior?.onClick) {
-			if (this._button) {
-				this._button.addEventListener('click', behavior.onClick);
-			} else {
-				container.addEventListener('click', behavior.onClick);
-			}
-		}
 	}
 
 	// Установка идентификатора карточки
@@ -89,6 +80,14 @@ export class CardCatalog extends Card {
 		// Инициализация полей карточки для каталога товаров
 		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._category = ensureElement<HTMLElement>('.card__category', container);
+
+		if (behavior?.onClick) {
+			if (this._button) {
+				this._button.addEventListener('click', behavior.onClick);
+			} else {
+				container.addEventListener('click', behavior.onClick);
+			}
+		}
 	}
 }
 
@@ -105,6 +104,12 @@ export class CardForBasket extends Card {
 			'.basket__item-index',
 			container
 		);
+
+		if (behavior?.onClick) {
+			if (this._button) {
+				this._button.addEventListener('click', behavior.onClick);
+			}
+		}
 	}
 
 	// Установка индекса товара
@@ -123,6 +128,12 @@ export class CardPreview extends Card {
 		this._category = ensureElement<HTMLElement>('.card__category', container);
 		this._description = ensureElement<HTMLElement>('.card__text', container);
 		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
+
+		if (behavior?.onClick) {
+			if (this._button) {
+				this._button.addEventListener('click', behavior.onClick);
+			}
+		}
 	}
 
 	// Установка описания карточки
