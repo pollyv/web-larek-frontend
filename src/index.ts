@@ -87,14 +87,19 @@ events.on('card:select', (item: IProductItem) => {
 			if (!appData.isIncludedCard(item.id)) {
 				appData.toggleOrderedItem(item.id, true);
 				page.counter = appData.getCountItems();
-				card.buttonText = 'Удалить из корзины';
+				card.buttonText = 'Удалить из корзины'; // Устанавливаем текст кнопки "Удалить из корзины"
 			} else {
 				appData.toggleOrderedItem(item.id, false);
 				page.counter = appData.getCountItems();
-				card.buttonText = 'В корзину';
+				card.buttonText = 'В корзину'; // Устанавливаем текст кнопки "В корзину"
 			}
 		},
 	});
+
+	// Устанавливаем текст кнопки в зависимости от состояния товара в корзине
+	card.buttonText = appData.isIncludedCard(item.id)
+		? 'Удалить из корзины'
+		: 'В корзину';
 
 	card.setColorCategory(item.category, settings);
 	card.buttonStatus = item.price;

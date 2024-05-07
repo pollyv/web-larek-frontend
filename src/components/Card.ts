@@ -18,12 +18,12 @@ export interface ICard extends IProductItem {
 // Абстрактный класс карточки
 export abstract class Card extends Component<ICard> {
 	// Защищенные поля карточки
-	protected _title: HTMLElement; // Заголовок
-	protected _image?: HTMLImageElement; // Изображение
-	protected _description?: HTMLElement; // Описание
-	protected _category?: HTMLElement; // Категория
-	protected _price: HTMLElement; // Цена
-	protected _button?: HTMLButtonElement; // Кнопка
+	protected _title: HTMLElement;
+	protected _price: HTMLElement;
+	protected _image?: HTMLImageElement;
+	protected _description?: HTMLElement;
+	protected _category?: HTMLElement;
+	protected _button?: HTMLButtonElement;
 
 	constructor(protected container: HTMLElement, behavior?: ICardBehavior) {
 		super(container);
@@ -139,16 +139,5 @@ export class CardPreview extends Card {
 		this._category = ensureElement<HTMLElement>('.card__category', container);
 		this._description = ensureElement<HTMLElement>('.card__text', container);
 		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
-
-		// Удаляем обработчик события клика на всю карточку
-		this.container.removeEventListener('click', behavior?.onClick);
-
-		// Добавляем обработчик события клика на кнопку "В корзину"
-		this._button.addEventListener('click', (event) => {
-			event.stopPropagation(); // Останавливаем всплытие события
-			if (behavior && behavior.onClick) {
-				behavior.onClick(event); // Вызываем обработчик
-			}
-		});
 	}
 }
