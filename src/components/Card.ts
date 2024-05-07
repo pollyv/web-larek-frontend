@@ -10,7 +10,7 @@ interface ICardBehavior {
 	onClick: (event: MouseEvent) => void; // Обработчик события клика
 }
 
-// Интерфейс для карточки
+// Интерфейс для карточки, расширяющий интерфейс продукта
 export interface ICard extends IProductItem {
 	index: number; // Индекс
 }
@@ -25,6 +25,7 @@ export abstract class Card extends Component<ICard> {
 	protected _category?: HTMLElement;
 	protected _button?: HTMLButtonElement;
 
+	// Конструктор класса
 	constructor(protected container: HTMLElement, behavior?: ICardBehavior) {
 		super(container);
 
@@ -61,26 +62,9 @@ export abstract class Card extends Component<ICard> {
 		}
 	}
 
-	// Установка текста кнопки карточки
-	set buttonText(value: string) {
-		this.setText(this._button, value);
-	}
-
-	// Установка состояния кнопки карточки
-	set buttonStatus(value: number) {
-		if (!value) {
-			this.setDisabled(this._button, true);
-		}
-	}
-
 	// Установка изображения карточки
 	set image(value: string) {
 		this.setImage(this._image, value, this.title);
-	}
-
-	// Установка описания карточки
-	set description(value: string) {
-		this.setText(this._description, value);
 	}
 
 	// Установка категории карточки
@@ -97,12 +81,12 @@ export abstract class Card extends Component<ICard> {
 	}
 }
 
-// Класс списка карточек
+// Класс карточки для каталога товаров
 export class CardCatalog extends Card {
 	constructor(container: HTMLElement, behavior?: ICardBehavior) {
 		super(container, behavior);
 
-		// Инициализация полей для списка
+		// Инициализация полей карточки для каталога товаров
 		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._category = ensureElement<HTMLElement>('.card__category', container);
 	}
@@ -115,7 +99,7 @@ export class CardForBasket extends Card {
 	constructor(container: HTMLElement, behavior?: ICardBehavior) {
 		super(container, behavior);
 
-		// Инициализация полей для карточки в корзине
+		// Инициализация полей карточки для корзины
 		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
 		this._itemIndex = ensureElement<HTMLImageElement>(
 			'.basket__item-index',
@@ -129,15 +113,32 @@ export class CardForBasket extends Card {
 	}
 }
 
-// Класс предварительного просмотра карточки
+// Класс карточки для предварительного просмотра
 export class CardPreview extends Card {
 	constructor(container: HTMLElement, behavior?: ICardBehavior) {
 		super(container, behavior);
 
-		// Инициализация полей для предварительного просмотра
+		// Инициализация полей карточки для предварительного просмотра
 		this._image = ensureElement<HTMLImageElement>('.card__image', container);
 		this._category = ensureElement<HTMLElement>('.card__category', container);
 		this._description = ensureElement<HTMLElement>('.card__text', container);
 		this._button = ensureElement<HTMLButtonElement>('.card__button', container);
+	}
+
+	// Установка описания карточки
+	set description(value: string) {
+		this.setText(this._description, value);
+	}
+
+	// Установка текста кнопки карточки
+	set buttonText(value: string) {
+		this.setText(this._button, value);
+	}
+
+	// Установка состояния кнопки карточки
+	set buttonStatus(value: number) {
+		if (!value) {
+			this.setDisabled(this._button, true);
+		}
 	}
 }
